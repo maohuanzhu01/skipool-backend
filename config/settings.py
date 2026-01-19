@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "rides",
     "chat",
     "corsheaders",
+    'drf_spectacular',
 ]
 
 
@@ -58,6 +59,14 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Skipool API',
+    'DESCRIPTION': 'API per il carpooling verso le località sciistiche',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 MIDDLEWARE = [

@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rides.views import DestinationListView, RideOfferListView
-
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
 urlpatterns = [
@@ -32,4 +32,8 @@ urlpatterns = [
     # api
     path("api/destinations/", DestinationListView.as_view()),
     path("api/rides/", RideOfferListView.as_view()),
+
+    #swagger
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
