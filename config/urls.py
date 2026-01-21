@@ -25,6 +25,14 @@ from rides.views import (
     search_ski_resorts,
     search_rides_by_date_range
 )
+from users.views import (
+    register_user,
+    get_current_user,
+    update_user,
+    update_profile,
+    get_public_profile,
+    check_email_availability,
+)
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
@@ -34,6 +42,14 @@ urlpatterns = [
     # auth
     path("api/token/", TokenObtainPairView.as_view(), name="token"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    
+    # users
+    path("api/users/register/", register_user, name="user-register"),
+    path("api/users/me/", get_current_user, name="user-me"),
+    path("api/users/me/update/", update_user, name="user-update"),
+    path("api/users/me/profile/", update_profile, name="profile-update"),
+    path("api/users/<int:user_id>/profile/", get_public_profile, name="public-profile"),
+    path("api/users/check-email/", check_email_availability, name="check-email"),
 
     # api
     path("api/destinations/", DestinationListView.as_view()),

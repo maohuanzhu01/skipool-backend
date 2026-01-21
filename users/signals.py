@@ -7,5 +7,9 @@ User = get_user_model()
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
+    """Crea automaticamente un profilo quando viene creato un utente"""
     if created:
-        Profile.objects.create(user=instance, display_name=instance.username)
+        # Controlla se il profilo non esiste già (potrebbe essere stato creato nel serializer)
+        if not hasattr(instance, 'profile') or not Profile.objects.filter(user=instance).exists():
+            display_name = f"{instance.first_name} {instance.last_name}".strip() or instance.username
+            Profile.objects.create(user=instance, display_name=display_name)
