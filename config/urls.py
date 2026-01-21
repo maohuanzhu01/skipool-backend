@@ -18,7 +18,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rides.views import DestinationListView, RideOfferListView
+from rides.views import (
+    DestinationListView, 
+    RideOfferListView, 
+    SkiResortListView,
+    search_ski_resorts
+)
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
@@ -32,6 +37,10 @@ urlpatterns = [
     # api
     path("api/destinations/", DestinationListView.as_view()),
     path("api/rides/", RideOfferListView.as_view()),
+    
+    # Impianti sciistici
+    path("api/ski-resorts/", SkiResortListView.as_view(), name="ski-resorts-list"),
+    path("api/ski-resorts/search/", search_ski_resorts, name="ski-resorts-search"),
 
     #swagger
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
