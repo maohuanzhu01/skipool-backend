@@ -22,7 +22,8 @@ from rides.views import (
     DestinationListView, 
     RideOfferListView, 
     SkiResortListView,
-    search_ski_resorts
+    search_ski_resorts,
+    search_rides_by_date_range
 )
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
@@ -41,6 +42,9 @@ urlpatterns = [
     # Impianti sciistici
     path("api/ski-resorts/", SkiResortListView.as_view(), name="ski-resorts-list"),
     path("api/ski-resorts/search/", search_ski_resorts, name="ski-resorts-search"),
+    
+    # Ricerca partenze per date
+    path("api/rides/search/", search_rides_by_date_range, name="rides-search"),
 
     #swagger
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
