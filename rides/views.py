@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from .models import Destination, RideOffer, SkiResort
 from .serializers import (
@@ -48,6 +49,16 @@ class SkiResortListView(generics.ListAPIView):
     serializer_class = SkiResortSerializer
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(name='q', description='Testo da cercare (es: "bobio" trova "Piani di Bobbio")', required=True, type=str),
+        OpenApiParameter(name='lat', description='Latitudine utente per calcolare distanza', required=False, type=float),
+        OpenApiParameter(name='lng', description='Longitudine utente per calcolare distanza', required=False, type=float),
+        OpenApiParameter(name='threshold', description='Soglia di similarità (0-1, default 0.4)', required=False, type=float),
+    ],
+    responses={200: SkiResortSearchResultSerializer(many=True)},
+    description='Ricerca fuzzy degli impianti sciistici. Trova le piste anche con errori di ortografia.'
+)
 @api_view(['GET'])
 @permission_classes([permissions.AllowAny])
 def search_ski_resorts(request):

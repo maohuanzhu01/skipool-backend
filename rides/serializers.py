@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from .models import Destination, RideOffer, SkiResort
 
 
@@ -14,10 +15,22 @@ class SkiResortSerializer(serializers.ModelSerializer):
         ]
 
 
+class AvailableRideSerializer(serializers.Serializer):
+    """Serializer per le partenze disponibili"""
+    id = serializers.CharField()
+    departure_time = serializers.DateTimeField()
+    price_per_seat = serializers.FloatField()
+    seats_available = serializers.IntegerField()
+    pickup_label = serializers.CharField()
+    pickup_lat = serializers.FloatField()
+    pickup_lng = serializers.FloatField()
+    driver_name = serializers.CharField()
+
+
 class SkiResortSearchResultSerializer(serializers.ModelSerializer):
     """Serializer per i risultati di ricerca con distanza e partenze"""
     region_display = serializers.CharField(source='get_region_display', read_only=True)
-    distance_km = serializers.FloatField(read_only=True, required=False)
+    distance_km = serializers.FloatField(read_only=True, required=False, allow_null=True)
     available_rides = serializers.SerializerMethodField()
     
     class Meta:
@@ -28,6 +41,7 @@ class SkiResortSearchResultSerializer(serializers.ModelSerializer):
             "distance_km", "available_rides"
         ]
     
+    @extend_schema_field(AvailableRideSerializer(many=True))
     def get_available_rides(self, obj):
         """Restituisce le partenze disponibili per questo impianto"""
         from django.utils import timezone
@@ -72,5 +86,6 @@ class RideOfferSerializer(serializers.ModelSerializer):
             "seats_available", "status"
         ]
     
-    def get_driver_name(self, obj):
+    @extend_schema_field(serializers.CharField())
+    def get_driver_name(self, obj) -> str:
         return f"{obj.driver.first_name} {obj.driver.last_name}".strip() or obj.driver.username
